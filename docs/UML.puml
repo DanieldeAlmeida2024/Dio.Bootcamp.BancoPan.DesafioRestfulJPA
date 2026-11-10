@@ -1,0 +1,16 @@
+@startuml
+title Dio.Bootcamp.BancoPan.DesafioRestfulJPA - componentes conceituais
+actor Operador
+component "Entrada" as Entrada
+component "Servicos" as Servico
+component "Aluno" as Dominio
+database "Persistencia / broker" as Banco
+Operador --> Entrada
+Entrada --> Servico
+Servico --> Dominio
+Dominio --> Banco : integração quando aplicável
+note bottom of Dominio
+Visão conceitual.
+Validar contra tipos reais do código.
+end note
+@enduml
