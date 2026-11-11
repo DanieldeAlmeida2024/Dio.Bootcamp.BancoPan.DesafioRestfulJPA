@@ -1,16 +1,21 @@
 @startuml
-title Dio.Bootcamp.BancoPan.DesafioRestfulJPA - componentes conceituais
-actor Operador
-component "Entrada" as Entrada
-component "Servicos" as Servico
-component "Aluno" as Dominio
-database "Persistencia / broker" as Banco
-Operador --> Entrada
-Entrada --> Servico
-Servico --> Dominio
-Dominio --> Banco : integração quando aplicável
-note bottom of Dominio
-Visão conceitual.
-Validar contra tipos reais do código.
+class Aluno { id: Long; nome; cpf <<unique>>; bairro; dataDeNascimento: LocalDate }
+class Matricula { id; dataDaMatricula; aluno }
+class AvaliacaoFisica { id; dataDaAvaliacao; peso; altura; aluno }
+class AlunoController
+class MatriculaController
+class AvaliacaoFisicaController
+class AlunoServiceImpl
+class AlunoRepository
+Aluno "1" -- "0..*" AvaliacaoFisica
+Aluno "1" -- "0..*" Matricula
+AlunoController --> AlunoServiceImpl
+AlunoServiceImpl --> AlunoRepository
+MatriculaController --> Matricula
+AvaliacaoFisicaController --> AvaliacaoFisica
+note right of Aluno
+@OneToMany avaliações
+cascade REMOVE, fetch LAZY
+CPF UNIQUE
 end note
 @enduml
