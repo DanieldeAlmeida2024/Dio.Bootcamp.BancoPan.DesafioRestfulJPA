@@ -1,3 +1,29 @@
+# Dio.Bootcamp.BancoPan.DesafioRestfulJPA
+
+API didática para gestão de alunos, matrículas e avaliações físicas, construída com Spring Boot e Spring Data JPA.
+
+## Requisitos
+
+Java, Maven Wrapper, Spring Boot, JPA e PostgreSQL. Configurar PostgreSQL conforme o projeto e conferir as propriedades reais; não executar em produção com credenciais de exemplo.
+
+## Execução
+
+```bash
+cd dio-spring-jpa
+./mvnw test
+./mvnw spring-boot:run
+```
+
+## Guias
+
+- [Arquitetura](docs/ARQUITETURA.md)
+- [Requisitos](docs/REQUISITOS.md)
+- [Diagrama UML](docs/UML.puml)
+- [Plano de testes](docs/PLANO_TESTES.md)
+- [Guia para IA](AGENTS.md)
+
+## Documentação original preservada
+
 <h1>Conhecendo o Projeto Spring Data JPA na Prática </h1>
 <p> Sejam bem-vindos ao projeto de LAB <strong>Conhecendo o Projeto Spring Data JPA na Prática</strong> oferecido gratuitamente pela plataforma de cursos online <a href="https://dio.me/"><strong> Digital Innovation One</strong></a>.<br>
 
@@ -98,7 +124,3 @@ Se possível:
 ------------
 
 Disponibilizado com ♥ por [cami-la](https://www.linkedin.com/in/cami-la/ "cami-la").
-
-
-
-
