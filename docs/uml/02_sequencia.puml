@@ -1,0 +1,15 @@
+@startuml
+actor Estudante
+participant "AlunoController" as Ctrl
+participant "AlunoServiceImpl" as S
+participant "AlunoRepository" as R
+database PostgreSQL as DB
+Estudante -> Ctrl : POST /alunos (AlunoForm)
+Ctrl -> S : create(valid form)
+S -> R : save(Aluno)
+R -> DB : INSERT tb_alunos
+DB --> R : ID gerado
+R --> S : Aluno
+S --> Ctrl : Aluno
+Ctrl --> Estudante : JSON
+@enduml
