@@ -25,7 +25,7 @@ class AlunoCpfIntegrationTests {
 
     private String alunoJson(String cpf) {
         return "{\"nome\":\"Pessoa Exemplo\",\"cpf\":\"" + cpf +
-                "\",\"bairro\":\"Centro\",\"dataDeNascimento\":\"1999-01-15\"}";
+                "\",\"bairro\":\"Centro\",\"dataDeNascimento\":\"15/01/1999\"}";
     }
 
     @Test
