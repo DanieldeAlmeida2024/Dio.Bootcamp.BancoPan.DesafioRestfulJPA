@@ -1,42 +1,38 @@
-# Dio.Bootcamp.BancoPan.DesafioRestfulJPA
+# Academia Digital — API REST Java com Spring Data JPA
 
-## Configuração segura e testes reproduzíveis
+Projeto de estudo baseado no laboratório **Conhecendo o Projeto Spring Data JPA na Prática**, da [Digital Innovation One](https://dio.me/). Organiza alunos, matrículas e avaliações físicas em uma API Spring Boot 2.6.1 com Java 11.
 
-Este é um exercício acadêmico baseado em Spring Boot 2.6.1 e Spring Data JPA. O repositório não deve embutir senha de banco nem ativar logs SQL detalhados como padrão.
+## O que funciona nesta versão
 
-Execute os testes em **Java 11**, sem PostgreSQL externo:
+- CRUD de alunos (`/alunos`) com edição parcial, pesquisa por data e consultas às avaliações.
+- Inclusão, listagem, consulta, atualização e exclusão de avaliações (`/avaliacoes`).
+- Matrícula única por aluno, consulta, filtro por bairro e exclusão (`/matriculas`).
+- Remover uma matrícula **não remove o aluno**. CPF não é exposto nos JSON de resposta.
+- Erros 400, 404 e 409 para situações de entrada inválida, inexistência e duplicidade.
+
+## Testar com banco temporário
+
+Requer **JDK 11 e Maven**. Execute na raiz:
 
 ```bash
 mvn -B -ntp -f dio-spring-jpa/pom.xml test
 ```
 
-O perfil `test` usa **H2 isolado**; os testes verificam a inicialização do Spring e uma persistência real de `Aluno`.
+O perfil `test` inicializa **H2 em memória** e testa endpoints com `MockMvc`. Nenhuma instância PostgreSQL é acessada pelo pipeline.
 
-Para executar a aplicação local com PostgreSQL, defina as variáveis `DB_URL`, `DB_USERNAME` e `DB_PASSWORD` fora do repositório. O valor padrão de `spring.jpa.hibernate.ddl-auto` passou a ser `validate` para evitar alterações automáticas de esquema; o banco precisa ter as tabelas criadas. Consulte a [configuração por ambiente](docs/CONFIGURACAO.md).
+## Executar com PostgreSQL local
 
-**Pendências conhecidas:** a versão do Spring Boot é legada e precisa de migração planejada para uma linha suportada, com mudanças de `javax` para `jakarta`. Há métodos CRUD ainda incompletos neste exercício; os testes desta rodada **não** atestam API pronta para produção.
-
-API didática para gestão de alunos, matrículas e avaliações físicas, construída com Spring Boot e Spring Data JPA.
-
-## Requisitos
-
-Java, Maven Wrapper, Spring Boot, JPA e PostgreSQL. Configurar PostgreSQL conforme o projeto e conferir as propriedades reais; não executar em produção com credenciais de exemplo.
-
-## Execução
+`application.yml` utiliza `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` e `JPA_DDL_AUTO` configuradas no ambiente. O modo padrão `ddl-auto=validate` **não cria as tabelas**; prepare o esquema antes da primeira execução e não salve credenciais no Git.
 
 ```bash
-cd dio-spring-jpa
-./mvnw test
-./mvnw spring-boot:run
+mvn -B -ntp -f dio-spring-jpa/pom.xml spring-boot:run
 ```
 
-## Guias
+Documentos: [Arquitetura](docs/ARQUITETURA.md) · [Requisitos](docs/REQUISITOS.md) · [UML](docs/UML.puml) · [Plano de testes](docs/PLANO_TESTES.md) · [Configuração](docs/CONFIGURACAO.md).
 
-- [Arquitetura](docs/ARQUITETURA.md)
-- [Requisitos](docs/REQUISITOS.md)
-- [Diagrama UML](docs/UML.puml)
-- [Plano de testes](docs/PLANO_TESTES.md)
-- [Guia para IA](AGENTS.md)
+**Importante:** esta é uma aplicação didática, sem autenticação/autorização, DTOs separados ou migrações versionadas. O Spring Boot 2.6.1 é legado e requer atualização antes de pensar em publicação.
+
+---
 
 ## Documentação original preservada
 
