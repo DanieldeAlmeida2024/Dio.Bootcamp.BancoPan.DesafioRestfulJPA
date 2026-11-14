@@ -18,7 +18,7 @@ public class AlunoForm {
   private String nome;
 
   @NotEmpty(message = "Preencha o campo corretamente.")
-  //@CPF(message = "'${validatedValue}' é inválido!")
+  @CPF(message = "CPF inválido.")
   private String cpf;
 
   @NotEmpty(message = "Preencha o campo corretamente.")
