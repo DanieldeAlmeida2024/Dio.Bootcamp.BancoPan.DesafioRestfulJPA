@@ -1,6 +1,7 @@
 package me.dio.academia.digital.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,7 @@ public class Aluno {
   private String nome;
 
   @Column(unique = true)
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String cpf;
 
   private String bairro;

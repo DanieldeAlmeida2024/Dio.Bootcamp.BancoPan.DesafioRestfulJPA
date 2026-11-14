@@ -1,16 +1,42 @@
 @startuml
-title Dio.Bootcamp.BancoPan.DesafioRestfulJPA - componentes conceituais
-actor Operador
-component "Entrada" as Entrada
-component "Servicos" as Servico
-component "Aluno" as Dominio
-database "Persistencia / broker" as Banco
-Operador --> Entrada
-Entrada --> Servico
-Servico --> Dominio
-Dominio --> Banco : integração quando aplicável
-note bottom of Dominio
-Visão conceitual.
-Validar contra tipos reais do código.
+title Academia Digital — domínio e API REST
+skinparam componentStyle rectangle
+actor "Cliente HTTP" as Client
+component "AlunoController" as AC
+component "AvaliacaoFisicaController" as FC
+component "MatriculaController" as MC
+component "AlunoServiceImpl" as AS
+component "AvaliacaoFisicaServiceImpl" as FS
+component "MatriculaServiceImpl" as MS
+database "AlunoRepository" as AR
+database "AvaliacaoFisicaRepository" as FR
+database "MatriculaRepository" as MR
+entity "Aluno" as Aluno
+entity "AvaliacaoFisica" as Avaliacao
+entity "Matricula" as Matricula
+Client --> AC
+Client --> FC
+Client --> MC
+AC --> AS
+FC --> FS
+MC --> MS
+AS --> AR
+AS --> MR : excluir matrícula antes do aluno
+FS --> FR
+FS --> AR
+MS --> MR
+MS --> AR
+AR --> Aluno
+FR --> Avaliacao
+MR --> Matricula
+Aluno "1" -- "*" Avaliacao : avaliações
+Aluno "1" -- "0..1" Matricula : matrícula
+note right of Matricula
+  Sem cascade remove do aluno.
+  aluno_id único.
+end note
+note bottom of Aluno
+  cpf ocultado na saída JSON;
+  ainda requer DTO e autorização.
 end note
 @enduml

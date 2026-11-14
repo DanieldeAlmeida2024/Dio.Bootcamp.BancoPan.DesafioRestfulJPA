@@ -18,8 +18,8 @@ public class Matricula {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @OneToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "aluno_id")
+  @OneToOne
+  @JoinColumn(name = "aluno_id", unique = true, nullable = false)
   private Aluno aluno;
 
   private LocalDateTime dataDaMatricula = LocalDateTime.now();

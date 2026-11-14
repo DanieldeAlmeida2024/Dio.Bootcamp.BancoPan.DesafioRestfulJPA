@@ -1,25 +1,26 @@
 # Arquitetura — Academia Digital (Spring Data JPA)
 
-Versão 1.1.0 · 14/11/2026
+Versão 1.2.0 · 14/11/2026
 
-## Camadas existentes
+## Organização real
 
-- `controller/`: endpoints `/alunos`, `/avaliacoes` e `/matriculas`, com dados JSON.
-- `service/` e `service/impl/`: regras de criação e listagem; partes de consulta, atualização e exclusão ainda não foram implementadas.
-- `repository/`: Spring Data JPA para as entidades `Aluno`, `AvaliacaoFisica` e `Matricula`.
-- `entity/` e `entity/form/`: mapeamento JPA e entrada de formulários.
+- `controller/AlunoController`: `POST /alunos`, `GET /alunos`, `GET /alunos/{id}`, `PUT /alunos/{id}`, `DELETE /alunos/{id}` e histórico de avaliações.
+- `controller/AvaliacaoFisicaController`: inclusão, consulta por ID, listagem, edição de peso/altura e exclusão.
+- `controller/MatriculaController`: criação, consulta por ID, listagem filtrada e exclusão.
+- `service/impl/`: regras de existência e status HTTP, atualização de entidades gerenciadas, validação de medidas e prevenção de matrícula duplicada.
+- `repository/`: JPA para `Aluno`, `AvaliacaoFisica` e `Matricula` (relação 1:1).
+- `entity/form/`: entrada de criação e atualização parcial do aluno e edição completa de avaliação física.
 
-Aplicação em Java 11 / Spring Boot 2.6.1 / Hibernate com importações `javax.persistence`. Trata-se de um laboratório legado, não da stack recomendada para publicação em 2026.
+## Integridade referencial
 
-## Ambientes
+Removida a configuração `CascadeType.ALL` de `Matricula.aluno`, que podia **excluir o aluno ao remover uma matrícula**. A exclusão de aluno agora remove as matrículas associadas antes de remover a entidade principal, na mesma transação. A relação de matrícula tem restrição `unique=true` sobre `aluno_id` e o serviço devolve HTTP 409 para duplicidade.
 
-- Configuração de runtime: `dio-spring-jpa/src/main/resources/application.yml`; variáveis `DB_URL`, `DB_USERNAME`, `DB_PASSWORD`, `SERVER_PORT`, `JPA_DDL_AUTO`.
-- Configuração de teste: `dio-spring-jpa/src/test/resources/application-test.yml`; H2 em memória, esquema transitório.
-- O arquivo genérico `application.properties` de 124 KB foi retirado, pois sobrepunha propriedades do projeto com centenas de exemplos inadequados.
-- A senha não é mais hardcoded. O log de SQL Hibernate está desabilitado e o default DDL é `validate`, sem alterações implícitas no banco.
+## Privacidade e escopo
 
-## Riscos de arquitetura
+`Aluno.cpf` passa a ter `@JsonProperty(access=WRITE_ONLY)` para não aparecer nas respostas JSON. **A entidade JPA ainda é usada diretamente na resposta**: precisam ser criados DTOs, autorização por papel e rastreabilidade antes de publicar. Essa correção não equivale à conformidade integral com a LGPD.
 
-Os controllers retornam entidades JPA diretamente, com informações pessoais (`cpf`); **não publicar** assim sem DTOs de saída e revisão LGPD. Falta autenticação e autorização, métodos CRUD completos, migração de esquema e atualização do Spring Boot para uma linha suportada. As relações JPA exigem revisão de cascatas de exclusão.
+O banco de teste é H2 isolado (`application-test.yml`), runtime padrão usa PostgreSQL com variáveis `DB_URL`, `DB_USERNAME` e `DB_PASSWORD`. Spring Boot 2.6.1 / `javax.persistence` continua legado; migração para Spring suportado é um trabalho separado.
 
-Este documento distingue o estado atual das próximas etapas; aprovação do CI de H2 não homologará a API em produção.
+## Testabilidade
+
+`AcademiaCrudIntegrationTests` sobe aplicação Spring, faz chamadas `MockMvc` e grava em H2. Os testes validam a persistência e comportamento HTTP sem banco externo. Não incluem cargas concorrentes, migrações de esquema PostgreSQL ou autenticação.
