@@ -3,7 +3,9 @@ package me.dio.academia.digital.controller;
 import me.dio.academia.digital.entity.Matricula;
 import me.dio.academia.digital.entity.form.MatriculaForm;
 import me.dio.academia.digital.service.impl.MatriculaServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -13,18 +15,29 @@ import java.util.List;
 @RequestMapping("/matriculas")
 public class MatriculaController {
 
-  @Autowired
-  private MatriculaServiceImpl service;
+    @Autowired
+    private MatriculaServiceImpl service;
 
-  @PostMapping
-  public Matricula create(@Valid @RequestBody MatriculaForm form) {
-    return service.create(form);
-  }
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Matricula create(@Valid @RequestBody MatriculaForm form) {
+        return service.create(form);
+    }
 
-  @GetMapping
-  public List<Matricula> getAll(@RequestParam(value = "bairro", required = false) String bairro) {
-    return service.getAll(bairro);
-  }
+    @GetMapping("/{id}")
+    public Matricula get(@PathVariable Long id) {
+        return service.get(id);
+    }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
+    }
+
+    @GetMapping
+    public List<Matricula> getAll(@RequestParam(value = "bairro", required = false)
+                                 String bairro) {
+        return service.getAll(bairro);
+    }
 }
-
