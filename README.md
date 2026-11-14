@@ -9,6 +9,7 @@ Projeto de estudo baseado no laboratório **Conhecendo o Projeto Spring Data JPA
 - Matrícula única por aluno, consulta, filtro por bairro e exclusão (`/matriculas`).
 - Remover uma matrícula **não remove o aluno**. CPF não é exposto nos JSON de resposta.
 - Erros 400, 404 e 409 para situações de entrada inválida, inexistência e duplicidade.
+- **CPF validado no cadastro** por dígitos verificadores (`@CPF`), padronizado no banco em 11 dígitos e protegido contra duplicação com resposta 409. O CPF segue oculto nas respostas JSON.
 
 ## Testar com banco temporário
 
