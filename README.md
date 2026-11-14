@@ -137,3 +137,7 @@ Se possível:
 ------------
 
 Disponibilizado com ♥ por [cami-la](https://www.linkedin.com/in/cami-la/ "cami-la").
+
+## Validação de CPF na regra de negócio
+
+Além de `@CPF` no formulário HTTP, o cadastro valida os dígitos verificadores **dentro de `AlunoServiceImpl`**, recusando sequências repetidas e CPFs inválidos antes de consultar ou gravar no banco. O formato persistido permanece normalizado com 11 dígitos, e o campo continua ausente das respostas JSON. Foram incluídos testes de integração que chamam diretamente o serviço, sem `MockMvc`, para verificar a proteção em outros adaptadores.
