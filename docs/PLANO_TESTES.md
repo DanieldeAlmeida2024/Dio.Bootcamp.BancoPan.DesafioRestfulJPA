@@ -1,31 +1,28 @@
-# Plano de testes — Academia Digital
+# Plano de testes — API Academia Digital
 
-Versão 1.1.0 · 14/11/2026
-
-## Testes automatizados nesta revisão
-
-Requer Java 11 e Maven:
+Versão 1.2.0 · 14/11/2026
 
 ```bash
 mvn -B -ntp -f dio-spring-jpa/pom.xml test
 ```
 
-| ID | Teste | Resultado esperado |
+O workflow `testes-jpa.yml` usa Java 11 e H2 do perfil `test`.
+
+| ID | Cenário | Resultado esperado |
 | --- | --- | --- |
-| JPA-01 | Inicialização `AcademiaDigitalApplicationTests` | Contexto Spring sobe usando perfil `test` |
-| JPA-02 | Teste no pacote legado `dio.dio_spring_jpa` | Classe de configuração explicitamente informada; contexto sobe |
-| JPA-03 | Criar `Aluno` em H2 | `saveAndFlush` gera ID, `findById` recupera nome e data |
-| CONF-01 | Configuração padrão | Não contém password fixa, desliga SQL trace |
-| CONF-02 | Runtime | `ddl-auto=validate` por padrão e variáveis de ambiente |
+| JPA-01 | Contexto Spring (incluindo pacote legado) | Inicializa com H2 |
+| JPA-02 | Persistência de aluno | `saveAndFlush` gera ID, `findById` recupera |
+| API-01 | GET por ID de aluno | 200 e **sem CPF no JSON** |
+| API-02 | PUT de aluno com nome/bairro | Preserva ID e data de nascimento |
+| API-03 | GET de aluno ausente | 404, não 500 |
+| API-04 | POST de matrícula | 201, aluno associado |
+| API-05 | DELETE da matrícula | 204, aluno permanece no banco |
+| API-06 | POST duplicado de matrícula | 409 (conflito) |
+| API-07 | POST avaliação com peso 0 | 400 |
+| API-08 | DELETE de aluno matriculado | 204, matrícula associada removida |
 
-Os casos CONF são decisões de configuração inspecionadas no repositório, **não asserts automáticos nesta versão**. A CI executa JPA-01 a JPA-03.
+## Fora do escopo testado
 
-## Testes pendentes
+Não há integração com PostgreSQL real, concorrência, testes completos de todos os campos de CPF, medição de carga, autorização por perfil ou aplicação de migrações no banco. A versão do Spring Boot é antiga e deve ser atualizada em projeto de migração com testes adicionais.
 
-- Contrato HTTP dos três controllers, status 400/404/201, validações DTO e erros de entrada.
-- CRUD completo de alunos/avaliações/matrículas e cascatas de exclusão.
-- Integração real PostgreSQL isolado e evolução de schema.
-- Controle de acesso, serialização de CPF e exposição de dados pessoais.
-- Migração e verificação de segurança do Spring Boot legado.
-
-Não classificar o serviço como pronto apenas com a aprovação do H2.
+Os testes HTTP são executados com `MockMvc`: isso verifica endpoints e serviço com H2, mas não substitui implantação real.
