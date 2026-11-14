@@ -1,0 +1,21 @@
+@startuml
+class Aluno { id: Long; nome; cpf <<unique>>; bairro; dataDeNascimento: LocalDate }
+class Matricula { id; dataDaMatricula; aluno }
+class AvaliacaoFisica { id; dataDaAvaliacao; peso; altura; aluno }
+class AlunoController
+class MatriculaController
+class AvaliacaoFisicaController
+class AlunoServiceImpl
+class AlunoRepository
+Aluno "1" -- "0..*" AvaliacaoFisica
+Aluno "1" -- "0..*" Matricula
+AlunoController --> AlunoServiceImpl
+AlunoServiceImpl --> AlunoRepository
+MatriculaController --> Matricula
+AvaliacaoFisicaController --> AvaliacaoFisica
+note right of Aluno
+@OneToMany avaliações
+cascade REMOVE, fetch LAZY
+CPF UNIQUE
+end note
+@enduml
