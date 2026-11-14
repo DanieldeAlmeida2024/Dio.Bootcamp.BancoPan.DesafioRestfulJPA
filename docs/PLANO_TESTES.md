@@ -6,7 +6,7 @@ Versão 1.2.0 · 14/11/2026
 mvn -B -ntp -f dio-spring-jpa/pom.xml test
 ```
 
-O workflow `testes-jpa.yml` usa Java 11 e H2 do perfil `test`.
+O workflow `testes-jpa.yml` usa Java 11 e H2 do perfil `test`. A API usa datas no formato brasileiro **dd/MM/yyyy**, definido no `LocalDateDeserializer` (não ISO 8601).
 
 | ID | Cenário | Resultado esperado |
 | --- | --- | --- |
