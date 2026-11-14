@@ -141,3 +141,9 @@ Disponibilizado com ♥ por [cami-la](https://www.linkedin.com/in/cami-la/ "cami
 ## Validação de CPF na regra de negócio
 
 Além de `@CPF` no formulário HTTP, o cadastro valida os dígitos verificadores **dentro de `AlunoServiceImpl`**, recusando sequências repetidas e CPFs inválidos antes de consultar ou gravar no banco. O formato persistido permanece normalizado com 11 dígitos, e o campo continua ausente das respostas JSON. Foram incluídos testes de integração que chamam diretamente o serviço, sem `MockMvc`, para verificar a proteção em outros adaptadores.
+
+## Documentação específica do domínio
+
+[Especificação da implementação](docs/projeto/ESPECIFICACAO.md) · [Modelo e sequências UML](docs/uml/README.md) · [Matriz de testes histórica](docs/testes/PLANO_DE_TESTES.md) · [Histórico documental](docs/controle/VERSIONAMENTO.md).
+
+Esses arquivos preservam a modelagem original do exercício; as verificações executadas e os requisitos atuais estão no [plano de testes vigente](docs/PLANO_TESTES.md) e nas execuções do GitHub Actions.
