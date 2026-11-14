@@ -2,7 +2,7 @@
 
 Projeto de estudo baseado no laboratório **Conhecendo o Projeto Spring Data JPA na Prática**, da [Digital Innovation One](https://dio.me/). Organiza alunos, matrículas e avaliações físicas em uma API Spring Boot 2.6.1 com Java 11.
 
-## O que funciona nesta versão
+## Funcionalidades da API
 
 - CRUD de alunos (`/alunos`) com edição parcial, pesquisa por data e consultas às avaliações.
 - Inclusão, listagem, consulta, atualização e exclusão de avaliações (`/avaliacoes`).
@@ -35,7 +35,7 @@ Documentos: [Arquitetura](docs/ARQUITETURA.md) · [Requisitos](docs/REQUISITOS.m
 
 ---
 
-## Documentação original preservada
+## Exercício Spring Data JPA — referência de estudo
 
 <h1>Conhecendo o Projeto Spring Data JPA na Prática </h1>
 <p> Sejam bem-vindos ao projeto de LAB <strong>Conhecendo o Projeto Spring Data JPA na Prática</strong> oferecido gratuitamente pela plataforma de cursos online <a href="https://dio.me/"><strong> Digital Innovation One</strong></a>.<br>
