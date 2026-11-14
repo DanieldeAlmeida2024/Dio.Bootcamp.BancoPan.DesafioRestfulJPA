@@ -38,7 +38,7 @@ public class AlunoServiceImpl implements IAlunoService {
         }
         // Formulário é validado via @CPF no controller. O banco usa sempre 11 dígitos.
         String cpf = form.getCpf().trim().replace(".", "").replace("-", "");
-        if (!cpf.matches("[0-9]{11}")) {
+        if (!cpfValido(cpf)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF inválido");
         }
         if (repository.existsByCpf(cpf)) {
@@ -56,6 +56,38 @@ public class AlunoServiceImpl implements IAlunoService {
             throw new ResponseStatusException(HttpStatus.CONFLICT,
                     "Já existe um aluno com os identificadores informados", erro);
         }
+    }
+
+    /**
+     * Revalida o CPF na camada de serviço. @CPF no controller não é
+     * executado em chamadas internas nem em outros adaptadores.
+     */
+    private static boolean cpfValido(String cpf) {
+        if (cpf == null || !cpf.matches("[0-9]{11}")) {
+            return false;
+        }
+        boolean repetido = true;
+        for (int i = 1; i < cpf.length(); i++) {
+            if (cpf.charAt(i) != cpf.charAt(0)) {
+                repetido = false;
+                break;
+            }
+        }
+        if (repetido) {
+            return false;
+        }
+        for (int digito = 9; digito <= 10; digito++) {
+            int soma = 0;
+            for (int i = 0; i < digito; i++) {
+                soma += (cpf.charAt(i) - '0') * (digito + 1 - i);
+            }
+            int resto = (soma * 10) % 11;
+            int esperado = resto == 10 ? 0 : resto;
+            if (cpf.charAt(digito) - '0' != esperado) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
