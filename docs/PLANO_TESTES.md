@@ -30,3 +30,13 @@ O workflow `testes-jpa.yml` usa Java 11 e H2 do perfil `test`. A API usa datas n
 Não há integração com PostgreSQL real, concorrência, testes de múltiplos formatos internacionais de identificação e carga, medição de carga, autorização por perfil ou aplicação de migrações no banco. A versão do Spring Boot é antiga e deve ser atualizada em projeto de migração com testes adicionais.
 
 Os testes HTTP são executados com `MockMvc`: isso verifica endpoints e serviço com H2, mas não substitui implantação real.
+
+## JPA-CPF 1.3.0 — defesa em profundidade do cadastro
+
+| ID | Camada | Cenário | Critério |
+| --- | --- | --- | --- |
+| CPF-05 | Serviço, sem MockMvc | CPF repetido (`11111111111` ou `00000000000`) | HTTP 400, não persiste |
+| CPF-06 | Serviço, sem MockMvc | CPF com dígito verificador incorreto (`52998224726`) | HTTP 400, não persiste |
+| CPF-07 | Serviço, sem MockMvc | CPF válido pontuado (`529.982.247-25`) | Normaliza e persiste 11 dígitos |
+
+Os testes `AlunoCpfIntegrationTests` invocam diretamente `AlunoServiceImpl.create` com H2 transacional, **sem passar pelo controlador nem pela anotação `@CPF`**. Isso comprova que a regra de domínio não depende apenas de validação HTTP. Não valida CPF com serviço governamental nem identidade real.

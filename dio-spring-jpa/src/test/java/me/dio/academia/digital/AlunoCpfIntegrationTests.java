@@ -1,6 +1,10 @@
 package me.dio.academia.digital;
 
 import me.dio.academia.digital.entity.Aluno;
+import me.dio.academia.digital.entity.form.AlunoForm;
+import me.dio.academia.digital.service.impl.AlunoServiceImpl;
+import org.springframework.web.server.ResponseStatusException;
+import java.time.LocalDate;
 import me.dio.academia.digital.repository.AlunoRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AlunoCpfIntegrationTests {
     @Autowired MockMvc mvc;
     @Autowired AlunoRepository alunos;
+    @Autowired AlunoServiceImpl alunoService;
 
     private String alunoJson(String cpf) {
         return "{\"nome\":\"Pessoa Exemplo\",\"cpf\":\"" + cpf +
@@ -71,4 +76,33 @@ class AlunoCpfIntegrationTests {
                 .content("{\"nome\":\"Pessoa Exemplo\",\"bairro\":\"Centro\",\"dataDeNascimento\":\"1999-01-15\"}"))
             .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void servicoRejeitaCpfComDigitosVerificadoresInvalidosSemPassarPeloController() {
+        AlunoForm form = new AlunoForm();
+        form.setNome("Pessoa de Teste");
+        form.setBairro("Centro");
+        form.setDataDeNascimento(LocalDate.of(1995, 1, 1));
+
+        for (String cpf : new String[] {"11111111111", "52998224726", "00000000000"}) {
+            form.setCpf(cpf);
+            ResponseStatusException erro = assertThrows(ResponseStatusException.class,
+                    () -> alunoService.create(form));
+            assertEquals(400, erro.getRawStatusCode());
+            assertFalse(alunos.existsByCpf(cpf));
+        }
+    }
+
+    @Test
+    void servicoAceitaCpfValidoEmChamadaDireta() {
+        AlunoForm form = new AlunoForm();
+        form.setNome("Pessoa de Teste");
+        form.setBairro("Centro");
+        form.setDataDeNascimento(LocalDate.of(1995, 1, 1));
+        form.setCpf("529.982.247-25");
+        Aluno salvo = alunoService.create(form);
+        assertEquals("52998224725", salvo.getCpf());
+        assertTrue(alunos.existsByCpf("52998224725"));
+    }
+
 }
