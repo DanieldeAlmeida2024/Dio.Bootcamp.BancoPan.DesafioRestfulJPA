@@ -11,6 +11,8 @@ Versão 1.2.0 · 14/11/2026
 - **RF05:** impedir que remover matrícula apague o aluno associado.
 - **RF06:** retornar HTTP 400/404 para entradas inválidas/entidades ausentes e 201/204 na criação/exclusão.
 - **RF07:** não serializar CPF nas respostas JSON de alunos.
+- **RF08:** validar dígitos verificadores de CPF antes de persistir; recusar CPF malformado com 400.
+- **RF09:** persistir CPF somente com 11 dígitos, detectar duplicatas com e sem pontuação e retornar 409. Restringir unicidade no banco para concorrência.
 
 ## Não funcionais
 

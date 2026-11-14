@@ -15,6 +15,10 @@ Versão 1.2.0 · 14/11/2026
 
 Removida a configuração `CascadeType.ALL` de `Matricula.aluno`, que podia **excluir o aluno ao remover uma matrícula**. A exclusão de aluno agora remove as matrículas associadas antes de remover a entidade principal, na mesma transação. A relação de matrícula tem restrição `unique=true` sobre `aluno_id` e o serviço devolve HTTP 409 para duplicidade.
 
+## CPF: consistência na fronteira HTTP
+
+O `AlunoForm` usa `@CPF` para verificar dígitos, em vez de aceitar qualquer string. O `AlunoServiceImpl` remove pontuação e persiste 11 dígitos no PostgreSQL/H2; o repositório permite `existsByCpf` para detectar duplicata antes do insert. A restrição `unique` do banco é preservada, e uma colisão de persistência retorna 409. Registros antigos com CPF não normalizado precisariam ser tratados antes de migração para produção (não houve migração do banco).
+
 ## Privacidade e escopo
 
 `Aluno.cpf` passa a ter `@JsonProperty(access=WRITE_ONLY)` para não aparecer nas respostas JSON. **A entidade JPA ainda é usada diretamente na resposta**: precisam ser criados DTOs, autorização por papel e rastreabilidade antes de publicar. Essa correção não equivale à conformidade integral com a LGPD.
