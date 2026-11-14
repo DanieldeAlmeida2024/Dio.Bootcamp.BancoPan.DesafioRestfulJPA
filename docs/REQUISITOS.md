@@ -1,20 +1,25 @@
-# Requisitos
+# Requisitos — Academia Digital
 
-## Objetivo
-API didática para gestão de alunos, matrículas e avaliações físicas, construída com Spring Boot e Spring Data JPA.
+Versão 1.2.0 · 14/11/2026
 
-RF01: executar o fluxo principal do domínio de Aluno.
+## Funcionais
 
-RF02: validar as entradas e devolver falhas previsíveis.
+- **RF01:** criar, listar, buscar por ID, editar campos permitidos e excluir aluno.
+- **RF02:** criar, listar, consultar, atualizar peso/altura e excluir avaliação física.
+- **RF03:** matricular aluno existente, consultar, listar por bairro e cancelar matrícula.
+- **RF04:** impedir duas matrículas para o mesmo aluno, retornando conflito 409.
+- **RF05:** impedir que remover matrícula apague o aluno associado.
+- **RF06:** retornar HTTP 400/404 para entradas inválidas/entidades ausentes e 201/204 na criação/exclusão.
+- **RF07:** não serializar CPF nas respostas JSON de alunos.
 
-RF03: isolar conexões de infraestrutura.
+## Não funcionais
 
-RNF01: execução repetível via ferramentas do projeto.
+- **RNF01:** isolar testes no H2, sem uso do PostgreSQL de desenvolvimento/produção.
+- **RNF02:** preservar integridade das referências e operações de exclusão em transações.
+- **RNF03:** usar variáveis de ambiente para a conexão do PostgreSQL.
+- **RNF04:** testes integrados `MockMvc` + JPA e Maven CI.
+- **RNF05:** manter créditos do exercício DIO e documentar limitações reais.
 
-RNF02: testes automatizados e documentação versionada.
+## Riscos ainda abertos
 
-RNF03: credenciais externas fora do controle de versão.
-
-**Pendência:** Configurar PostgreSQL conforme o projeto e conferir as propriedades reais; não executar em produção com credenciais de exemplo.
-
-Requisitos extraídos do código e complementados por hipóteses didáticas identificadas.
+Spring Boot 2.6.1 legado, falta autenticação, DTOs de saída, migração de schema, tratamento de concorrência e testes E2E PostgreSQL. Estas funções são exercícios, não serviço pronto para produção.
