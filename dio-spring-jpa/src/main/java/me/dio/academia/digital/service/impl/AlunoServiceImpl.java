@@ -11,6 +11,7 @@ import me.dio.academia.digital.service.IAlunoService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,12 +33,29 @@ public class AlunoServiceImpl implements IAlunoService {
 
     @Override
     public Aluno create(AlunoForm form) {
+        if (form == null || form.getCpf() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF obrigatório");
+        }
+        // Formulário é validado via @CPF no controller. O banco usa sempre 11 dígitos.
+        String cpf = form.getCpf().trim().replace(".", "").replace("-", "");
+        if (!cpf.matches("[0-9]{11}")) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CPF inválido");
+        }
+        if (repository.existsByCpf(cpf)) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "CPF já cadastrado");
+        }
         Aluno aluno = new Aluno();
         aluno.setNome(form.getNome());
-        aluno.setCpf(form.getCpf());
+        aluno.setCpf(cpf);
         aluno.setBairro(form.getBairro());
         aluno.setDataDeNascimento(form.getDataDeNascimento());
-        return repository.save(aluno);
+        try {
+            return repository.saveAndFlush(aluno);
+        } catch (DataIntegrityViolationException erro) {
+            // Garante conflito mesmo se outro cadastro vencer a corrida entre consulta e INSERT.
+            throw new ResponseStatusException(HttpStatus.CONFLICT,
+                    "Já existe um aluno com os identificadores informados", erro);
+        }
     }
 
     @Override
