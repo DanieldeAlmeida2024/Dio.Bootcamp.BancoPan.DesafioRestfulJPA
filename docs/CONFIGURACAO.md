@@ -14,7 +14,7 @@ As configurações são lidas de `dio-spring-jpa/src/main/resources/application.
 | `DB_PASSWORD` | *vazio* | Senha fornecida fora do Git |
 | `JPA_DDL_AUTO` | `validate` | Validação do esquema, sem migrações implícitas |
 
-No PowerShell, use por exemplo `$env:DB_PASSWORD = (Read-Host -AsSecureString "Senha")` **somente se o processo de aplicação for capaz de consumir o valor como texto**; não salve credenciais no arquivo versionado. Para executar normalmente, configure a variável com o gerenciador de segredos do ambiente e inicie `mvn -f dio-spring-jpa/pom.xml spring-boot:run`.
+Configure `DB_PASSWORD` por meio do gerenciador de segredos ou das variáveis de ambiente do processo antes de executar `mvn -f dio-spring-jpa/pom.xml spring-boot:run`. O JDBC precisa receber uma string comum; **não** atribua diretamente um objeto `SecureString` do PowerShell a uma variável de ambiente. Nunca registre a senha no terminal, README ou Git.
 
 O `application.properties` antigo, com cerca de 124 KB de documentação de propriedades do Spring incluída no runtime, foi removido. Logs de SQL e parâmetros Hibernate estão desligados por padrão.
 
