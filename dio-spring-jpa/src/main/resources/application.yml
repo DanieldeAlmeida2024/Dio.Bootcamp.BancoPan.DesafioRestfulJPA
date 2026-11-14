@@ -1,20 +1,19 @@
-
-server.port: 8081
+server:
+  port: ${SERVER_PORT:8081}
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/academia?useTimezone=true&serverTimezone=UTC&useLegacyDate
-    username: cami
-    password: root
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/academia}
+    username: ${DB_USERNAME:academia}
+    password: ${DB_PASSWORD:}
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${JPA_DDL_AUTO:validate}
     properties:
-      hibernate.format_sql: true
+      hibernate:
+        format_sql: false
 
 logging:
   level:
-    org:
-      hibernate:
-        type: trace
+    org.hibernate.type: WARN
