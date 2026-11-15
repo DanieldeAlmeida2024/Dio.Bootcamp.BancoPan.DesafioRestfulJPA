@@ -102,6 +102,32 @@ class AcademiaCrudIntegrationTests {
     }
 
     @Test
+    void consultarMatriculasPorBairroNaoMisturaAlunosNemColunasDaJoin() throws Exception {
+        Aluno centro = inserirAluno();
+        Aluno marista = inserirAluno();
+        marista.setBairro("Marista");
+        alunos.saveAndFlush(marista);
+
+        for (Aluno aluno : new Aluno[] {centro, marista}) {
+            mvc.perform(post("/matriculas")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content("{\"alunoId\":" + aluno.getId() + "}"))
+               .andExpect(status().isCreated());
+        }
+
+        mvc.perform(get("/matriculas").param("bairro", " Centro "))
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.length()").value(1))
+           .andExpect(jsonPath("$[0].aluno.id").value(centro.getId()))
+           .andExpect(jsonPath("$[0].aluno.bairro").value("Centro"));
+
+        mvc.perform(get("/matriculas").param("bairro", "Marista"))
+           .andExpect(status().isOk())
+           .andExpect(jsonPath("$.length()").value(1))
+           .andExpect(jsonPath("$[0].aluno.id").value(marista.getId()));
+    }
+
+    @Test
     void avaliacaoInvalidaRetornaBadRequest() throws Exception {
         Aluno aluno = inserirAluno();
         mvc.perform(post("/avaliacoes")
