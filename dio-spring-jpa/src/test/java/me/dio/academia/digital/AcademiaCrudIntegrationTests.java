@@ -111,7 +111,7 @@ class AcademiaCrudIntegrationTests {
         for (Aluno aluno : new Aluno[] {centro, marista}) {
             mvc.perform(post("/matriculas")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content("{\\"alunoId\\":" + aluno.getId() + "}"))
+                    .content("{\"alunoId\":" + aluno.getId() + "}"))
                .andExpect(status().isCreated());
         }
 
